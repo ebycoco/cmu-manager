@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Erreur serveur{% endblock %}
+
+{% block content %}
+<div class="error-page-card text-center">
+    <div class="error-code text-danger">500</div>
+    <h1 class="error-title">Erreur interne du serveur</h1>
+    <p class="error-text">
+        Une erreur inattendue s’est produite. Veuillez réessayer plus tard.
+    </p>
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <a href="{% url 'home' %}" class="btn btn-primary">
+            Retour à l’accueil
+        </a>
+    </div>
+</div>
+{% endblock %}

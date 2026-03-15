@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Bannir un utilisateur{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h1 class="h3 text-warning mb-3">Bannir l'utilisateur</h1>
+                <p>
+                    Voulez-vous vraiment bannir l'utilisateur
+                    <strong>{{ user_obj.username }}</strong> ?
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning">Bannir</button>
+                        <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

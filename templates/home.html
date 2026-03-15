@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accueil - CMU Manager{% endblock %}
+
+{% block content %}
+<div class="modern-hero">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <div class="hero-logo-wrapper mb-3">
+                <img src="{% static 'img/cmu-logo.png' %}" alt="Logo CMU" class="hero-logo">
+            </div>
+
+            <h1 class="hero-title">Bienvenue sur CMU Manager</h1>
+            <p class="hero-subtitle">
+                Application professionnelle de gestion des cartes CMU :
+                recherche rapide, affichage du code rangement, import de fichiers,
+                gestion des comptes utilisateurs et suivi des données.
+            </p>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    Accéder à mon dashboard
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+                    Se connecter
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-5">
+            <div class="hero-image-card text-center">
+                <img src="{% static 'img/cmu-logo.png' %}" alt="Image CMU" class="hero-image-large mb-4">
+
+                <h2 class="h5 mb-3">Fonctionnalités clés</h2>
+                <ul class="list-unstyled mb-0 text-start d-inline-block">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Recherche client rapide</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Code rangement mis en avant</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Import CSV / Excel</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Détection des doublons</li>
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Gestion sécurisée des utilisateurs</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Vider les données{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 border-danger">
+            <div class="card-body">
+                <h1 class="h3 text-danger mb-3">Vider les données métier</h1>
+
+                <div class="alert alert-danger">
+                    <strong>Attention :</strong> cette action supprimera définitivement :
+                    <ul class="mb-0 mt-2">
+                        <li>tous les clients CMU,</li>
+                        <li>tous les lots d'import,</li>
+                        <li>tous les doublons détectés.</li>
+                    </ul>
+                </div>
+
+                <p class="text-muted">
+                    Les utilisateurs et leurs rôles ne seront pas supprimés.
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="confirm_text" class="form-label">
+                            Pour confirmer, tapez <strong>CONFIRMER</strong>
+                        </label>
+                        <input
+                            type="text"
+                            name="confirm_text"
+                            id="confirm_text"
+                            class="form-control"
+                            placeholder="Tapez CONFIRMER"
+                            required
+                        >
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            Vider les données
+                        </button>
+                        <a href="{% url 'import_history' %}" class="btn btn-outline-secondary">
+                            Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

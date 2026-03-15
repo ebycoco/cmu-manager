@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Historique des imports{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h1 class="h3 text-primary mb-1">Historique des imports</h1>
+            <p class="text-muted mb-0">Suivez les imports réalisés dans l'application.</p>
+        </div>
+        <a href="{% url 'import_upload' %}" class="btn btn-primary">
+            Nouvel import
+        </a>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                {% if batches %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Fichier</th>
+                                    <th>Type</th>
+                                    <th>Importé par</th>
+                                    <th>Date</th>
+                                    <th>Statut</th>
+                                    <th>Total</th>
+                                    <th>Nouveaux</th>
+                                    <th>Doublons</th>
+                                    <th>Mises à jour</th>
+                                    <th>Ignorés</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for batch in batches %}
+                                    <tr>
+                                        <td>{{ batch.file_name }}</td>
+                                        <td>{{ batch.get_file_type_display }}</td>
+                                        <td>{{ batch.imported_by|default:"-" }}</td>
+                                        <td>{{ batch.imported_at|date:"d/m/Y H:i" }}</td>
+                                        <td>{{ batch.get_status_display }}</td>
+                                        <td>{{ batch.total_rows }}</td>
+                                        <td>{{ batch.new_rows }}</td>
+                                        <td>{{ batch.duplicate_rows }}</td>
+                                        <td>{{ batch.updated_rows }}</td>
+                                        <td>{{ batch.skipped_rows }}</td>
+                                        <td class="text-center">
+                                            <a href="{% url 'import_delete' batch.pk %}" class="btn btn-sm btn-outline-danger">
+                                                Supprimer
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                        <div class="p-3 border-top bg-light">
+                            <nav aria-label="Pagination historique imports">
+                                <ul class="pagination mb-0 justify-content-center">
+                                    {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=1">« Première</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédente</a>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                                        </span>
+                                    </li>
+
+                                    {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivante</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Dernière »</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="p-4 text-center text-muted">
+                        Aucun import enregistré.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

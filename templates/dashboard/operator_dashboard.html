@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Opérateur{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="page-title">Dashboard Opérateur</h1>
+    <p class="page-subtitle">Accès rapide à la recherche client et consultation du code rangement.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6 col-xl-4">
+        <div class="dashboard-card card-primary h-100">
+            <div class="dashboard-card-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <h2 class="dashboard-card-title">Recherche client</h2>
+            <p class="dashboard-card-text">
+                Recherchez rapidement un client afin d’identifier son code rangement.
+            </p>
+            <a href="{% url 'client_search' %}" class="btn btn-light">
+                Ouvrir la recherche
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

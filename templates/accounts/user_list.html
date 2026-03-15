@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12 d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+        <div>
+            <h1 class="h3 text-primary mb-1">Gestion des utilisateurs</h1>
+            <p class="text-muted mb-0">Liste des comptes utilisateurs de l'application.</p>
+        </div>
+        <a href="{% url 'user_create' %}" class="btn btn-primary">
+            <i class="bi bi-person-plus"></i> Créer un utilisateur
+        </a>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <form method="get" class="row g-3 align-items-end">
+                    <div class="col-md-7">
+                        <label class="form-label">{{ form.q.label }}</label>
+                        {{ form.q }}
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ form.role.label }}</label>
+                        {{ form.role }}
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="bi bi-search"></i> Rechercher
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                {% if users %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Email</th>
+                                    <th>Rôle</th>
+                                    <th>Mot de passe</th>
+                                    <th>Actif</th>
+                                    <th>Banni</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user_obj in users %}
+                                    <tr>
+                                        <td>{{ user_obj.username }}</td>
+                                        <td>{{ user_obj.last_name|default:"-" }}</td>
+                                        <td>{{ user_obj.first_name|default:"-" }}</td>
+                                        <td>{{ user_obj.email|default:"-" }}</td>
+                                        <td>
+                                            <span class="badge role-badge {{ user_obj.role_badge_class }}">
+                                                {{ user_obj.role_display_label }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if user_obj.password_was_changed %}
+                                                <span class="text-muted d-inline-flex align-items-center gap-1">
+                                                    <i class="bi bi-eye-slash-fill"></i>
+                                                    Mot de passe modifié
+                                                </span>
+                                            {% else %}
+                                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                                    <code id="pwd-{{ user_obj.pk }}">{{ user_obj.generated_password|default:"-" }}</code>
+                                                    {% if user_obj.generated_password %}
+                                                        <button
+                                                            type="button"
+                                                            class="btn btn-sm btn-outline-secondary"
+                                                            onclick="copyPassword('pwd-{{ user_obj.pk }}', this)"
+                                                            title="Copier le mot de passe"
+                                                        >
+                                                            <i class="bi bi-clipboard"></i>
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user_obj.is_active %}
+                                                <span class="badge bg-success">Oui</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Non</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user_obj.is_banned %}
+                                                <span class="badge bg-danger">Oui</span>
+                                            {% else %}
+                                                <span class="badge bg-success">Non</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2 flex-wrap">
+                                                <a href="{% url 'user_update' user_obj.pk %}" class="btn btn-sm btn-outline-primary" title="Modifier">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+
+                                                {% if user_obj != request.user %}
+                                                    <a href="{% url 'user_reset_password' user_obj.pk %}" class="btn btn-sm btn-outline-dark" title="Réinitialiser le mot de passe">
+                                                        <i class="bi bi-key"></i>
+                                                    </a>
+
+                                                    {% if user_obj.is_banned %}
+                                                        <a href="{% url 'user_reactivate' user_obj.pk %}" class="btn btn-sm btn-outline-success" title="Réactiver">
+                                                            <i class="bi bi-unlock"></i>
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="{% url 'user_ban' user_obj.pk %}" class="btn btn-sm btn-outline-warning" title="Bannir">
+                                                            <i class="bi bi-lock"></i>
+                                                        </a>
+                                                    {% endif %}
+
+                                                    <a href="{% url 'user_delete' user_obj.pk %}" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                {% else %}
+                                                    <span class="text-muted small">Action indisponible sur votre compte</span>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                        <div class="p-3 border-top bg-light">
+                            <nav aria-label="Pagination utilisateurs">
+                                <ul class="pagination mb-0 justify-content-center">
+                                    {% if page_obj.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_role %}role={{ selected_role }}&{% endif %}page=1">« Première</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_role %}role={{ selected_role }}&{% endif %}page={{ page_obj.previous_page_number }}">Précédente</a>
+                                        </li>
+                                    {% endif %}
+
+                                    <li class="page-item disabled">
+                                        <span class="page-link">
+                                            Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                                        </span>
+                                    </li>
+
+                                    {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_role %}role={{ selected_role }}&{% endif %}page={{ page_obj.next_page_number }}">Suivante</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}{% if selected_role %}role={{ selected_role }}&{% endif %}page={{ page_obj.paginator.num_pages }}">Dernière »</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="p-4 text-center text-muted">
+                        Aucun utilisateur trouvé.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyPassword(elementId, button) {
+        const passwordText = document.getElementById(elementId).innerText;
+
+        navigator.clipboard.writeText(passwordText).then(() => {
+            const originalHtml = button.innerHTML;
+            button.innerHTML = '<i class="bi bi-check-lg"></i>';
+            button.classList.remove('btn-outline-secondary');
+            button.classList.add('btn-success');
+
+            setTimeout(() => {
+                button.innerHTML = originalHtml;
+                button.classList.remove('btn-success');
+                button.classList.add('btn-outline-secondary');
+            }, 1500);
+        }).catch(() => {
+            alert("Impossible de copier le mot de passe.");
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Administrateur{% endblock %}
+
+{% block content %}
+<div class="page-header mb-4">
+    <h1 class="page-title">Dashboard Administrateur</h1>
+    <p class="page-subtitle">Gestion opérationnelle des clients, imports, utilisateurs et données.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="dashboard-card card-soft-blue h-100">
+            <div class="dashboard-card-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <h2 class="dashboard-card-title">Recherche client</h2>
+            <p class="dashboard-card-text">Consulter rapidement les clients et leur rangement.</p>
+            <a href="{% url 'client_search' %}" class="btn btn-primary">Accéder</a>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="dashboard-card card-soft-green h-100">
+            <div class="dashboard-card-icon">
+                <i class="bi bi-upload"></i>
+            </div>
+            <h2 class="dashboard-card-title">Import</h2>
+            <p class="dashboard-card-text">Importer des fichiers CSV/Excel et traiter les doublons.</p>
+            <a href="{% url 'import_upload' %}" class="btn btn-success">Importer</a>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="dashboard-card card-soft-purple h-100">
+            <div class="dashboard-card-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <h2 class="dashboard-card-title">Utilisateurs</h2>
+            <p class="dashboard-card-text">Gérer les comptes, bannissements et réinitialisations.</p>
+            <a href="{% url 'user_list' %}" class="btn btn-primary">Gérer</a>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="dashboard-card card-soft-danger h-100">
+            <div class="dashboard-card-icon">
+                <i class="bi bi-trash"></i>
+            </div>
+            <h2 class="dashboard-card-title">Nettoyage</h2>
+            <p class="dashboard-card-text">Vider les données métier avec confirmation.</p>
+            <a href="{% url 'truncate_data' %}" class="btn btn-danger">Ouvrir</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

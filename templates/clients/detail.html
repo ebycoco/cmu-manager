@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Détail client - CMU Manager{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="h3 mb-1 text-primary">Détail du client</h1>
+            <p class="text-muted mb-0">Consultez les informations complètes du client.</p>
+        </div>
+        <a href="{% url 'client_search' %}" class="btn btn-outline-secondary">
+            Retour à la recherche
+        </a>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body text-center">
+                <p class="text-muted mb-2">Code rangement</p>
+                <div class="rangement-highlight mb-3">
+                    {{ client.rangement }}
+                </div>
+                <p class="small text-muted mb-0">
+                    Information prioritaire pour retrouver la carte physique.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="detail-label">NOMS</label>
+                        <div class="detail-value">{{ client.noms }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="detail-label">PRENOMS</label>
+                        <div class="detail-value">{{ client.prenoms|default:"-" }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="detail-label">DATE DE NAISSANCE</label>
+                        <div class="detail-value">
+                            {% if client.date_naissance %}
+                                {{ client.date_naissance|date:"d/m/Y" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="detail-label">NUM SECU</label>
+                        <div class="detail-value">{{ client.num_secu|default:"-" }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="detail-label">LIEU DE NAISSANCE</label>
+                        <div class="detail-value">{{ client.lieu_naissance|default:"-" }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="detail-label">CONTACT</label>
+                        <div class="detail-value">{{ client.contact|default:"-" }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="detail-label">LIEU D'ENROLEMENT</label>
+                        <div class="detail-value">{{ client.lieu_enrolement|default:"-" }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="detail-label">STATUT</label>
+                        <div class="detail-value">{{ client.statut|default:"-" }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="detail-label">DATE DE DELIVRANCE</label>
+                        <div class="detail-value">
+                            {% if client.date_delivrance %}
+                                {{ client.date_delivrance|date:"d/m/Y" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+    <label class="detail-label">LIEU DE NAISSANCE</label>
+    <div class="detail-value">{{ client.lieu_naissance|default:"-" }}</div>
+</div>
+                    <div class="col-md-6">
+                        <label class="detail-label">FICHIER SOURCE</label>
+                        <div class="detail-value">{{ client.source_file_name|default:"-" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmation de l'import{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h1 class="h3 text-primary mb-3">Revue de l'import</h1>
+
+                <div class="mb-4">
+                    <ul class="list-group">
+                        <li class="list-group-item"><strong>Fichier :</strong> {{ batch.file_name }}</li>
+                        <li class="list-group-item"><strong>Total lignes :</strong> {{ batch.total_rows }}</li>
+                        <li class="list-group-item"><strong>Nouvelles lignes :</strong> {{ batch.new_rows }}</li>
+                        <li class="list-group-item"><strong>Doublons détectés :</strong> {{ batch.duplicate_rows }}</li>
+                    </ul>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    {% if duplicates %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Ligne</th>
+                                        <th>Données importées</th>
+                                        <th>Client existant</th>
+                                        <th>Type doublon</th>
+                                        <th>Décision</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for duplicate in duplicates %}
+                                        <tr>
+                                            <td>{{ duplicate.row_index }}</td>
+                                            <td>
+                                                <div><strong>NOMS :</strong> {{ duplicate.incoming_data.noms }}</div>
+                                                <div><strong>PRENOMS :</strong> {{ duplicate.incoming_data.prenoms }}</div>
+                                                <div><strong>DATE NAISSANCE :</strong> {{ duplicate.incoming_data.date_naissance|default:"-" }}</div>
+                                                <div><strong>NUM SECU :</strong> {{ duplicate.incoming_data.num_secu|default:"-" }}</div>
+                                                <div><strong>LIEU NAISSANCE :</strong> {{ duplicate.incoming_data.lieu_naissance|default:"-" }}</div>
+                                                <div><strong>CONTACT :</strong> {{ duplicate.incoming_data.contact|default:"-" }}</div>
+                                                <div><strong>LIEU ENROLEMENT :</strong> {{ duplicate.incoming_data.lieu_enrolement|default:"-" }}</div>
+                                                <div><strong>RANGEMENT :</strong> {{ duplicate.incoming_data.rangement }}</div>
+                                                <div><strong>STATUT :</strong> {{ duplicate.incoming_data.statut|default:"-" }}</div>
+                                            </td>
+                                            <td>
+                                                {% if duplicate.matched_client %}
+                                                    <div><strong>{{ duplicate.matched_client.noms }} {{ duplicate.matched_client.prenoms }}</strong></div>
+                                                    <div><strong>Date naissance :</strong> {{ duplicate.matched_client.date_naissance|date:"d/m/Y"|default:"-" }}</div>
+                                                    <div><strong>Num sécu :</strong> {{ duplicate.matched_client.num_secu|default:"-" }}</div>
+                                                    <div><strong>Rangement :</strong> {{ duplicate.matched_client.rangement }}</div>
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ duplicate.get_match_type_display }}</td>
+                                            <td>
+                                                <select name="decision_{{ duplicate.id }}" class="form-select">
+                                                    <option value="KEEP_EXISTING">Garder l'existant</option>
+                                                    <option value="UPDATE_EXISTING">Mettre à jour l'existant</option>
+                                                    <option value="SKIP">Ignorer</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success">
+                            Aucun doublon détecté. L'import créera uniquement de nouveaux clients.
+                        </div>
+                    {% endif %}
+
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            Confirmer l'import
+                        </button>
+                        <a href="{% url 'import_history' %}" class="btn btn-outline-secondary">
+                            Retour à l'historique
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

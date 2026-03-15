@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Import de données{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h1 class="h3 text-primary mb-3">Importer un fichier clients</h1>
+                <p class="text-muted">
+                    Formats acceptés : CSV et Excel (.xlsx).
+                </p>
+
+                <form method="post" enctype="multipart/form-data" id="import-form">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.file.label }}</label>
+                        {{ form.file }}
+                        {% if form.file.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.file.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary" id="submit-btn">
+                            Analyser le fichier
+                        </button>
+                        <a href="{% url 'import_history' %}" class="btn btn-outline-secondary">
+                            Historique
+                        </a>
+                    </div>
+                </form>
+
+                <div id="progress-container" class="mt-4 d-none">
+                    <div class="alert alert-info mb-3">
+                        Analyse du fichier en cours... Veuillez patienter.
+                    </div>
+
+                    <div class="progress" role="progressbar" aria-label="Analyse du fichier" aria-valuemin="0" aria-valuemax="100">
+                        <div
+                            id="progress-bar"
+                            class="progress-bar progress-bar-striped progress-bar-animated"
+                            style="width: 0%;"
+                        >
+                            0%
+                        </div>
+                    </div>
+
+                    <div class="small text-muted mt-2" id="progress-text">
+                        Initialisation de l'analyse...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const importForm = document.getElementById('import-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+
+    importForm.addEventListener('submit', function () {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Analyse en cours...';
+        progressContainer.classList.remove('d-none');
+
+        let progress = 0;
+
+        const steps = [
+            { value: 15, text: 'Téléversement du fichier...' },
+            { value: 35, text: 'Lecture des données...' },
+            { value: 55, text: 'Vérification des colonnes...' },
+            { value: 75, text: 'Analyse des lignes...' },
+            { value: 90, text: 'Détection des doublons...' },
+        ];
+
+        let index = 0;
+
+        const interval = setInterval(() => {
+            if (index < steps.length) {
+                progress = steps[index].value;
+                progressBar.style.width = progress + '%';
+                progressBar.innerText = progress + '%';
+                progressBar.setAttribute('aria-valuenow', progress);
+                progressText.innerText = steps[index].text;
+                index++;
+            } else {
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                progressBar.innerText = '100%';
+                progressBar.setAttribute('aria-valuenow', 100);
+                progressText.innerText = 'Finalisation...';
+            }
+        }, 500);
+    });
+</script>
+{% endblock %}

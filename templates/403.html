@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Accès interdit{% endblock %}
+
+{% block content %}
+<div class="error-page-card text-center">
+    <div class="error-code text-warning">403</div>
+    <h1 class="error-title">Accès interdit</h1>
+    <p class="error-text">
+        Vous n’avez pas l’autorisation d’accéder à cette ressource.
+    </p>
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <a href="{% url 'home' %}" class="btn btn-primary">
+            Retour à l’accueil
+        </a>
+    </div>
+</div>
+{% endblock %}

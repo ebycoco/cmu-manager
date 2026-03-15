@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Recherche client - CMU Manager{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-12">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h1 class="h3 mb-1 text-primary">Recherche client</h1>
+                <p class="text-muted mb-0">
+                    Saisissez le nom ou le prénom du client. Si plusieurs résultats sont trouvés,
+                    vous pourrez affiner avec la date de naissance.
+                </p>
+            </div>
+
+            {% if can_export %}
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'client_export_csv' %}?{{ request.GET.urlencode }}" class="btn btn-outline-success">
+                        Export CSV
+                    </a>
+                    <a href="{% url 'client_export_excel' %}?{{ request.GET.urlencode }}" class="btn btn-success">
+                        Export Excel
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <form
+                    id="search-form"
+                    method="get"
+                    hx-get="{% url 'client_search' %}"
+                    hx-target="#search-results"
+                    hx-trigger="keyup changed delay:300ms from:#id_noms, keyup changed delay:300ms from:#id_prenoms, change from:#id_date_naissance"
+                    hx-include="#search-form"
+                >
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-5">
+                            <label class="form-label">{{ form.noms.label }}</label>
+                            {{ form.noms }}
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">{{ form.prenoms.label }}</label>
+                            {{ form.prenoms }}
+                        </div>
+                        <div class="col-md-2 d-grid">
+                            <a href="{% url 'client_search' %}" class="btn btn-outline-secondary">
+                                Réinitialiser
+                            </a>
+                        </div>
+                    </div>
+
+                    <div id="search-results" class="mt-4">
+                        {% include 'clients/partials/search_results.html' %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
