@@ -31,7 +31,7 @@
                         <th>PRENOMS</th>
                         <th>DATE NAISSANCE</th>
                         <th>LIEU DE NAISSANCE</th>
-                        <th>LIEU D'ENROLEMENT</th>
+                        <th>CONTACT</th>
                         <th>RANGEMENT</th>
                         <th class="text-center">Action</th>
                     </tr>
@@ -49,7 +49,7 @@
                                 {% endif %}
                             </td>
                             <td>{{ client.lieu_naissance|default:"-" }}</td>
-                            <td>{{ client.lieu_enrolement|default:"-" }}</td>
+                            <td>{{ client.contact|default:"-" }}</td>
                             <td>
                                 <span class="badge rangement-badge">
                                     {{ client.rangement }}

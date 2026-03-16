@@ -9,7 +9,7 @@
             <div>
                 <h1 class="h3 mb-1 text-primary">Recherche client</h1>
                 <p class="text-muted mb-0">
-                    Saisissez le nom ou le prénom du client. Si plusieurs résultats sont trouvés,
+                    Saisissez le nom ou le prénom ou le contact du client. Si plusieurs résultats sont trouvés,
                     vous pourrez affiner avec la date de naissance.
                 </p>
             </div>
@@ -35,17 +35,21 @@
                     method="get"
                     hx-get="{% url 'client_search' %}"
                     hx-target="#search-results"
-                    hx-trigger="keyup changed delay:300ms from:#id_noms, keyup changed delay:300ms from:#id_prenoms, change from:#id_date_naissance"
+                    hx-trigger="keyup changed delay:300ms from:#id_noms, keyup changed delay:300ms from:#id_prenoms,keyup changed delay:300ms from:#id_contact, change from:#id_date_naissance"
                     hx-include="#search-form"
                 >
                     <div class="row g-3 align-items-end">
-                        <div class="col-md-5">
+                        <div class="col-md-3">
                             <label class="form-label">{{ form.noms.label }}</label>
                             {{ form.noms }}
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label class="form-label">{{ form.prenoms.label }}</label>
                             {{ form.prenoms }}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">{{ form.contact.label }}</label>
+                            {{ form.contact }}
                         </div>
                         <div class="col-md-2 d-grid">
                             <a href="{% url 'client_search' %}" class="btn btn-outline-secondary">

@@ -20,6 +20,15 @@ class ClientSearchForm(forms.Form):
             'autocomplete': 'off',
         })
     )
+    contact = forms.CharField(
+        required=False,
+        label="CONTACT",
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ex: 0708091011',
+            'autocomplete': 'off',
+        })
+    )
     date_naissance = forms.DateField(
         required=False,
         label="DATE DE NAISSANCE",

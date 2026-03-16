@@ -11,16 +11,18 @@ from .models import Client
 
 
 def get_filtered_clients(request):
-    queryset = Client.objects.all().order_by('noms', 'prenoms')
+    queryset = Client.objects.all().order_by('noms', 'prenoms','contact')
     form = ClientSearchForm(request.GET or None)
 
     noms = ''
     prenoms = ''
+    contact = ''
     date_naissance = None
 
     if form.is_valid():
         noms = form.cleaned_data.get('noms')
         prenoms = form.cleaned_data.get('prenoms')
+        contact = form.cleaned_data.get('contact')
         date_naissance = form.cleaned_data.get('date_naissance')
 
         if noms:
@@ -29,10 +31,13 @@ def get_filtered_clients(request):
         if prenoms:
             queryset = queryset.filter(prenoms__icontains=prenoms)
 
+        if contact:
+            queryset = queryset.filter(contact__icontains=contact)
+
         if date_naissance:
             queryset = queryset.filter(date_naissance=date_naissance)
 
-    has_name_input = bool(noms or prenoms)
+    has_name_input = bool(noms or prenoms or contact)
     return queryset, form, has_name_input
 
 
