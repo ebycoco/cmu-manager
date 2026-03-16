@@ -28,6 +28,7 @@ L’objectif principal est d’aider les opérateurs à retrouver rapidement un 
 - recherche rapide par :
   - noms,
   - prénoms,
+  - contact,
   - date de naissance,
 - affichage clair des résultats,
 - mise en avant visuelle du code rangement,
